@@ -19,7 +19,7 @@ var nav = {
     
     '/vms' : function( event ) {
         console.log("Gone to vms");
-    }
+    },
 }
 
 /**
@@ -38,7 +38,7 @@ $(document).ready(function() {
     });
     
     $.address.change( function ( event ) {
-        if (nav.has_key(event.path)) {
+        if (nav[event.path]) {
             nav[event.path](event);
         } else {
             // 404, do something useful
