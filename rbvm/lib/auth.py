@@ -26,6 +26,17 @@ def require_login(func):
             raise cherrypy.HTTPRedirect(config.SITE_ADDRESS + 'login')
     return wrapper
 
+def require_login_rpc(func):
+    """
+    Decorator to require a user to be logged in to carry out an RPC function
+    """
+    def wrapper(*args, **kwargs):
+        if cherrypy.session.get('authenticated') == True:
+            return func(*args, **kwargs)
+        else:
+            raise cherrypy.HTTPError(403)
+    return wrapper
+
 def require_nologin(func):
     """
     Decorator to ensure that a user is not logged in

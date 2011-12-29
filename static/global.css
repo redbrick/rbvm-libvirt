@@ -230,3 +230,9 @@ table.formtable td.actions input {
     background-color : #c00;
     color : #fff;
 }
+
+
+div.loader {
+    text-align : center;
+    margin : 5em;
+}
