@@ -14,11 +14,15 @@
 var nav = {
     
     '/' : function( event ) {
-        console.log("Gone to root");
+
     },
     
-    '/vms' : function( event ) {
-        console.log("Gone to vms");
+    '/usersettings' : function( event ) {
+
+    },
+    
+    '/password' : function ( event ) {
+    
     },
 }
 

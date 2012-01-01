@@ -10,3 +10,12 @@ class Rpc:
     def get_user_details():
         user = get_user()
         return json_encode(username=user.username,id=user.id)
+        
+    @cherrypy.expose
+    @require_login_rpc
+    @rpc
+    def get_sparse_vm_list():
+        """
+        Return a list of VMs that the user owns
+        """
+        return json_encode(vms=[])
