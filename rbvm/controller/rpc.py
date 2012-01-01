@@ -7,13 +7,6 @@ class Rpc:
     @cherrypy.expose
     @require_login_rpc
     @rpc
-    def get_user_domains(hello=None):
-        domains = [('test', 10, 20), ('test2', 10, 30)]
-        return json_encode(domains=domains)
-    
-    @cherrypy.expose
-    @require_login_rpc
-    @rpc
     def get_user_details():
         user = get_user()
         return json_encode(username=user.username,id=user.id)

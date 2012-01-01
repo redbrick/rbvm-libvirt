@@ -79,12 +79,31 @@ class Group(Base):
     
     # }}}
 
-class Domain(Base):
-    __tablename__ = 'domain_table'
+class Hypervisor(Base):
+    """
+    A hypervisor
+    """
+    __tablename__ = 'hypervisor'
     
-    id = Column(Integer,Sequence('domain_table_id_seq'),primary_key=True)
+    id = Column(Integer,Sequence('hypervisor_id_seq'),primary_key=True)
+    name = Column(String(255))
+    uri = Column(String(1024))
+
+    def __repr__(self):
+        return "<Hypervisor('%s')>" % self.uri
+    
+    def __init__(self, name, uri):
+        self.name = name
+        self.uri = uri
+
+class Domain(Base):
+    """
+    Maps a domain (by UUID) to a user.
+    """
+    __tablename__ = 'domain'
+    
+    id = Column(Integer,Sequence('domain_id_seq'),primary_key=True)
     uuid = Column(String(36))
-    definition = Column(Text)
     user_id = Column(ForeignKey('user_table.id'))
     
     def __repr__(self):
