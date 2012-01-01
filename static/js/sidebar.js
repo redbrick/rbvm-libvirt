@@ -5,6 +5,7 @@
     sidePanel.append($('<h3><a href="#">Options</a></h3>'));
     sidePanel.append($('<div>Settings go here</div>'));
     
-    $('#content').append(sidePanel);
     
+    $('body').append(sidePanel);
+    sidePanel.accordion();
 })( jQuery );

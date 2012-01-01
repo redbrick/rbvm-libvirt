@@ -26,7 +26,6 @@ var nav = {
  * Initialisation stuff
  */
 $(document).ready(function() {
-    $.getScript('/static/js/sidebar.js');
     
     $.rpc('get_user_details', {
         success : function( data ) {
@@ -38,11 +37,15 @@ $(document).ready(function() {
         }
     });
     
-    /*$.address.change( function ( event ) {
+    $.address.change( function ( event ) {
         if (nav[event.path]) {
             nav[event.path](event);
         } else {
             // 404, do something useful
         }
-    });*/
+    });
+    
+    $.getScript('/static/js/sidebar.js');
+    $.getScript('/static/js/homepage.js');
 });
+

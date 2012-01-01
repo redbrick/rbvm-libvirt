@@ -33,13 +33,6 @@ div#headarea_right {
     float : right;
 }
 
-div#content {
-    width : 900px;
-    margin-left : auto;
-    margin-right : auto;
-    padding : 5px;
-}
-
 div#footer {
     width : 900px;
     margin-left : auto;
@@ -232,7 +225,24 @@ table.formtable td.actions input {
 }
 
 
-div.loader {
+div#loader {
     text-align : center;
     margin : 5em;
+}
+
+div#sidebar {
+    position : absolute;
+    top : 36px;
+    left : 0px;
+    bottom : 0px;
+    width : 250px;
+}
+
+div#content {
+    position : absolute;
+    top : 36px;
+    left : 250px;
+    bottom : 0px;
+    right : 0px;
+    padding : 5px;
 }
