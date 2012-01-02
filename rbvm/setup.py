@@ -50,4 +50,18 @@ def install_groups():
     session.add(vm_admin)
     session.commit()
     
+def install_hypervisor(name, uri):
+    """
+    Installs a hypervisor
+    """
+    print "Connecting to database..."
+    engine = create_engine(config.DATABASE_URI)
 
+    Session = sessionmaker()
+    Session.configure(bind=engine)
+    session = Session()
+    
+    print "Adding hypervisor"
+    hypervisor = Hypervisor(name, uri)
+    session.add(hypervisor)
+    session.commit()

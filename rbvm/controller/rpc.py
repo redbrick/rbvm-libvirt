@@ -18,6 +18,17 @@ class Rpc:
         """
         Return a list of VMs that the user owns
         """
+        
+        return json_encode(vms=[])
+    
+    @cherrypy.expose
+    @require_login_rpc
+    @rpc
+    def get_vm_list():
+        """
+        Return VM list
+        """
+        
         return json_encode(vms=[])
     
     @cherrypy.expose

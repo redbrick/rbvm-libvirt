@@ -14,7 +14,7 @@
 var nav = {
     
     '/' : function( event ) {
-
+        $.address.value('vmlist');
     },
     
     '/usersettings' : function( event ) {
@@ -23,6 +23,10 @@ var nav = {
     
     '/password' : function ( event ) {
     
+    },
+    
+    '/vmlist' : function ( event ) {
+        
     },
 }
 
@@ -50,6 +54,6 @@ $(document).ready(function() {
     });
     
     $.getScript('/static/js/sidebar.js');
-    $.getScript('/static/js/homepage.js');
+    $.getScript('/static/js/dashboard.js');
 });
 
