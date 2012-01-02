@@ -16,6 +16,7 @@ def main():
     parser = OptionParser()
     parser.add_option('-u','--username',default=None,help='the username to be created')
     parser.add_option('-e','--email',default=None,help='the email address of the new user')
+    parser.add_option('-p','--password',default=None,help='password of the new user (optional)')
     
     options, args = parser.parse_args()
 
@@ -34,8 +35,13 @@ def main():
     if user is not None:
         print "The user %s already exists!" % options.username
         return
-
-    password = "".join(random.sample(string.letters + string.digits,8))
+    
+    password = None
+    if options.password is None:
+        password = "".join(random.sample(string.letters + string.digits,8))
+    else:
+        password = options.password
+    
     user = User(options.username,options.email, password)
     session.add(user)
     session.commit()
