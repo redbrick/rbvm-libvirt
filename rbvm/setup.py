@@ -21,5 +21,33 @@ def install(drop_all=False):
     print "Installing new schema..."
     Base.metadata.create_all(engine)
 
+def install_groups():
+    """
+    Installs base groups
+    """
+    
+    print "Connecting to database..."
+    engine = create_engine(config.DATABASE_URI)
 
+    Session = sessionmaker()
+    Session.configure(bind=engine)
+    session = Session()
+    
+    print "Adding system groups"
+    admins = Group('Admins','admin')
+    users = Group('Users','user')
+    session.add(admins)
+    session.add(users)
+    session.commit()
+    
+    print "Adding abilities"
+    user_admin = Ability('User administration','user_admin')
+    vm_admin = Ability('VM administration','vm_admin')
+    
+    user_admin.groups.append(admins)
+    vm_admin.groups.append(admins)
+    session.add(user_admin)
+    session.add(vm_admin)
+    session.commit()
+    
 

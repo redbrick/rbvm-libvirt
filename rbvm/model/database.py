@@ -52,6 +52,17 @@ class User(Base):
         self.set_password(password_plain)
         self.email_address = email_address
     
+    def has_ability(ability_name):
+        for ability_obj in self.abilities:
+            if ability_obj.system_name == ability_name:
+                return True
+            
+        for group in self.groups:
+            if group.has_ability(ability_name):
+                return True
+        
+        return False
+    
     # }}}
 
 user_group = Table('user_group',Base.metadata, # {{{
@@ -74,8 +85,49 @@ class Group(Base):
     def __repr__(self):
         return "<Group('%s')>" % (self.name)
     
-    def __init__(self,name):
+    def __init__(self,name,system_name):
         self.name = name
+        self.system_name = system_name
+    
+    def has_ability(ability_name):
+        for ability_obj in self.abilities:
+            if ability_obj.system_name == ability_name:
+                return True
+        
+        return False
+    
+    # }}}
+
+user_ability = Table('user_ability',Base.metadata, # {{{
+    Column('user_id',Integer,ForeignKey('user_table.id')),
+    Column('ability_id',Integer,ForeignKey('ability.id'))
+) # }}}
+
+group_ability = Table('group_ability',Base.metadata, # {{{
+    Column('group_id',Integer,ForeignKey('group_table.id')),
+    Column('ability_id',Integer,ForeignKey('ability.id'))
+) # }}}
+
+class Ability(Base):
+    """
+    Abilities, assigned to groups and users
+    """
+    # {{{
+    __tablename__ = 'ability'
+    
+    id = Column(Integer,Sequence('ability_id_seq'),primary_key=True)
+    name = Column(String(255))
+    system_name = Column(String(255))
+    
+    users = relation('User',secondary=user_ability,backref="abilities")
+    groups = relation('Group',secondary=group_ability,backref="abilities")
+    
+    def __repr__(self):
+        return "<Ability('%s')>" % self.system_name
+    
+    def __init__(self, name, system_name):
+        self.name = name
+        self.system_name = system_name
     
     # }}}
 

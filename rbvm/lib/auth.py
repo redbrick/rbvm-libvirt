@@ -15,6 +15,62 @@ def get_user():
         user = database.session.query(User).filter(User.username == username).first()
         return user
 
+def require_ability(name):
+    """
+    Ensure that the current user has the ability called name
+    """
+    def decorate(func):
+        def wrapper(*args, **kwargs):
+            user = get_user()
+            
+            if user is None:
+                raise cherrypy.HTTPError(403)
+            
+            if user.has_ability(name):
+                return func(*args, **kwargs)
+            
+            raise cherrypy.HTTPError(403)
+        return wrapper
+    return decorate
+
+def require_any_ability(names):
+    """
+    Ensure that the current user has any of the abilities listed
+    """
+    def decorate(func):
+        def wrapper(*args, **kwargs):
+            user = get_user()
+            
+            if user is None:
+                raise cherrypy.HTTPError(403)
+            
+            for name in names:
+                if user.has_ability(name):
+                    return func(*args, **kwargs)
+            
+            raise cherrypy.HTTPError(403)
+        return wrapper
+    return decorate
+
+def require_all_abilities(names):
+    """
+    Ensure that the current user has all of the abilities listed
+    """
+    def decorate(func):
+        def wrapper(*args, **kwargs):
+            user = get_user()
+            
+            if user is None:
+                raise cherrypy.HTTPError(403)
+            
+            for name in names:
+                if not user.has_ability(name):
+                    raise cherrypy.HTTPError(403)
+            
+            return func(*args, **kwargs)
+        return wrapper
+    return decorate
+
 def require_login(func):
     """
     Decorator to require a user to be logged in

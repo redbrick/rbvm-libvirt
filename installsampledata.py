@@ -13,8 +13,8 @@ def populate():
     session = Session()
 
     print "Adding sample groups"
-    admins = Group('Admins')
-    users = Group('Users')
+    admins = Group('Admins','admin')
+    users = Group('Users','user')
     session.add(admins)
     session.add(users)
     session.commit()
