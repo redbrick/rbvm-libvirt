@@ -6,6 +6,7 @@ import hashlib
 import os
 import base64
 import datetime
+import libvirt
 
 from sqlalchemy import Table,Column,MetaData,ForeignKey
 from sqlalchemy.schema import Sequence, ForeignKeyConstraint
@@ -32,6 +33,8 @@ class User(Base):
     salt = Column(String(10),nullable=False)
     password = Column(String(255),nullable=False)
     email_address = Column(String(255),nullable=False)
+    
+    domains = relation('Domain', backref='user')
     
     def set_password(self,password_plain):
         salt = ''.join(random.Random().sample(string.letters + string.digits,9))
@@ -89,7 +92,7 @@ class Group(Base):
         self.name = name
         self.system_name = system_name
     
-    def has_ability(ability_name):
+    def has_ability(self, ability_name):
         for ability_obj in self.abilities:
             if ability_obj.system_name == ability_name:
                 return True
@@ -140,13 +143,29 @@ class Hypervisor(Base):
     id = Column(Integer,Sequence('hypervisor_id_seq'),primary_key=True)
     name = Column(String(255))
     uri = Column(String(1024))
-
+    
+    domains = relation('Domain',backref='hypervisor')
+    
+    _connection = None
+    
     def __repr__(self):
         return "<Hypervisor('%s')>" % self.uri
     
     def __init__(self, name, uri):
         self.name = name
         self.uri = uri
+    
+    def connect(self):
+        self._connection = libvirt.open(self.uri)
+    
+    def is_connected(self):
+        return self._connection is not None and self._connection.isAlive() == 1
+    
+    def list_domains(self):
+        if not self.is_connected():
+            self.connect()
+        
+        return [self._connection.lookupByName(n) for n in self._connection.listDefinedDomains()] + [self._connection.lookupByID(i) for i in self._connection.listDomainsID()]
 
 class Domain(Base):
     """
@@ -157,6 +176,7 @@ class Domain(Base):
     id = Column(Integer,Sequence('domain_id_seq'),primary_key=True)
     uuid = Column(String(36))
     user_id = Column(ForeignKey('user_table.id'))
+    hypervisor_id = Column(ForeignKey('hypervisor.id'))
     
     def __repr__(self):
         return "<Domain('%s'>)" % (self.uuid)
@@ -165,6 +185,7 @@ class Domain(Base):
         self.uuid = uuid
         self.definition = definition
         self.user_id = user.id
+    
 
 class OneTimeToken(Base):
     """
