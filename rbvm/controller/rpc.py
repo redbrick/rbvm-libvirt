@@ -39,28 +39,15 @@ class Rpc:
         
         for domain in user.domains:
             hv_conn = None
-            model = TransferableDomain()
-            
             
             if domain.hypervisor.uri in hv_connections:
                 hv_conn = hv_connections[domain.hypervisor.uri]
             else:
                 hv_conn = libvirt.open(domain.hypervisor.uri)
                 hv_connections[domain.hypervisor.uri] = hv_conn
-            print hv_conn
-            if hv_conn is None:
-                model.set_status(INFO_HYPERVISOR_DOWN)
-                vms.append(model.to_dict())
-                continue
-                
-            dom_conn = hv_conn.lookupByUUID(uuid.UUID(domain.uuid).bytes)
-            if dom_conn is None:
-                model.set_status(INFO_DOMAIN_NOT_FOUND)
-                vms.append(model.to_dict())
-                continue
             
-            model.populate(dom_conn)
-            
+            model = TransferableDomain()
+            model.initialise(hv_conn, domain.uuid)
             vms.append(model.to_dict())
         
         return json_encode(vms=vms)

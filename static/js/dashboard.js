@@ -3,6 +3,9 @@
     
     var content = $('<div id="content"></div>');
     content.append($('<b>Main content</b>'));
+    
+    var table = $('<table id="dashboardTable"></table>')
+    
     $('body').append(content);
     
     $.rpc('get_vm_list', {
