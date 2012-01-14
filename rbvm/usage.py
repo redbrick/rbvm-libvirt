@@ -5,11 +5,7 @@ usage['index'] = """
 rbvmctl is the rbvm command line utility. Any of the following subcommands
 will work:
 
-    changeip        Changes the IP assigned to a VM.
-    changename      Changes the name of a VM.
     listusers       Displays a list of users.
-    listvms         Displays a list of virtual machines.
-    showvm          Displays detailed information on a virtual machine.
     resetpw         Allows a user's password to be reset.
     help            Displays help information.
 
