@@ -16,7 +16,7 @@ def help(session, args, force):
         key = 'index'
     else:
         key = args[0]
-    
+
     if key not in rbvm.usage.usage:
         print "Unknown command"
     else:
@@ -31,15 +31,15 @@ def showvm(session, args, force):
     except:
         print "Invalid VM identifier"
         sys.exit(1)
-    
+
     vm = rbvm.vmmon.get_vm(id, session=session)
     if vm is None:
         print "Could not find VM."
         sys.exit(1)
-    
+
     owner = session.query(User).filter(User.id==vm.user_id).one()
     status_boolean = rbvm.vmmon.check_vm_status(vm)
-    
+
     format = "%20s : %s"
     print format % ("ID", str(vm.id))
     print format % ("Name", str(vm.name))
@@ -63,7 +63,7 @@ def listusers(session, args, force):
     """
     users = session.query(User).all()
     print "%-10s | %s" % ("Username","Email address")
-    
+
     for user in users:
         print "%-10s | %s" % (user.username, user.email_address)
 
@@ -83,7 +83,7 @@ def listvms(session, args, force):
         header_format = header_format + " | %s"
         header_tup_end = ('Assigned IP',)
         line_format = line_format + " | %s"
-    
+
     print header_format % (("ID","VM name","Username","Status","PID") + header_tup_end)
     for vm in vms:
         owner = session.query(User).filter(User.id==vm.user_id).one()
@@ -91,12 +91,12 @@ def listvms(session, args, force):
         status = "Off"
         if status_boolean is True:
             status = "On"
-        
+
         line_tup = (vm.id, vm.name, owner.username, status, str(vm.pid))
-        
+
         if showips:
             line_tup = line_tup + (str(vm.assigned_ip),)
-        
+
         print line_format % line_tup
 
 def resetpw(session, args, force):
@@ -104,13 +104,13 @@ def resetpw(session, args, force):
     Resets a user's password
     """
     username = args[0]
-    
+
     password = "".join(random.sample(string.letters + string.digits,8))
     user = session.query(User).filter(User.username==username).first()
     if user is None:
         print "User %s not found." % username
         sys.exit(1)
-    
+
     user.set_password(password)
     session.commit()
     print "Password for user %s has been changed to: %s" % (username, password)
@@ -127,7 +127,7 @@ def changename(session, args, force):
     vm_id = args[0]
     int(vm_id)
     vm = rbvm.vmmon.get_vm(vm_id, session=session)
-    
+
     name = args[1]
     rbvm.vmmon.change_vm_name(vm, name, session=session)
     print "VM name changed to %s" % name
@@ -139,7 +139,7 @@ def changeip(session, args, force):
     vm_id = args[0]
     ip = args[1]
     int(vm_id)
-    
+
     vm = rbvm.vmmon.get_vm(vm_id, session=session)
     rbvm.vmmon.set_assigned_ip(vm, ip, force=force, session=session, commit=True)
     print "VM IP changed to %s" % ip

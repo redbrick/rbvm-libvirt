@@ -82,6 +82,7 @@ class Group(Base):
 
     id = Column(Integer,Sequence('group_table_id_seq'),primary_key=True)
     name = Column(String(255))
+    system_name = Column(String(255))
     
     users = relation('User',secondary=user_group,backref='groups')
 
