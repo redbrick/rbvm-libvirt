@@ -147,7 +147,6 @@ class Hypervisor(Base):
     
     domains = relation('Domain',backref='hypervisor')
     
-    _connection = None
     
     def __repr__(self):
         return "<Hypervisor('%s')>" % self.uri
@@ -157,16 +156,11 @@ class Hypervisor(Base):
         self.uri = uri
     
     def connect(self):
-        self._connection = libvirt.open(self.uri)
-    
-    def is_connected(self):
-        return self._connection is not None and self._connection.isAlive() == 1
+        return libvirt.open(self.uri)
     
     def list_domains(self):
-        if not self.is_connected():
-            self.connect()
-        
-        return [self._connection.lookupByName(n) for n in self._connection.listDefinedDomains()] + [self._connection.lookupByID(i) for i in self._connection.listDomainsID()]
+        conn = self.connect()
+        return [conn.lookupByName(n) for n in conn.listDefinedDomains()] + [conn.lookupByID(i) for i in conn.listDomainsID()]
 
 class Domain(Base):
     """
