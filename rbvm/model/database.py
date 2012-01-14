@@ -182,10 +182,10 @@ class Domain(Base):
     def __repr__(self):
         return "<Domain('%s'>)" % (self.uuid)
     
-    def __init__(self, uuid, definition, user):
+    def __init__(self, uuid, user, hypervisor):
         self.uuid = uuid
-        self.definition = definition
         self.user_id = user.id
+        self.hypervisor_id = hypervisor.id
     
 
 class OneTimeToken(Base):

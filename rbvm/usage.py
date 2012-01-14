@@ -88,3 +88,17 @@ The command will object if you try to assign an IP that has been taken by
 another virtual machine. To continue in spite of these objections, use the
 force (-f, or --force) option.
 """
+
+usage['register'] = """
+The register command allows a domain (VM) created using an external libvirt
+tool to be registered to a user with RBVM.
+
+Three arguments are required: The address of the hypervisor on which the
+virtual machine was created, the virtual machine's UUID and the RBVM username
+of whoever is to have control over it. For example:
+
+rbvmctl register qemu:///system 48ee8e34-3eda-11e1-9b5c-00508d954ae7 bob
+
+will assign the virtual machine on the hypervisor at qemu:///system with the
+UUID 48ee8e34-3eda-11e1-9b5c-00508d954ae7 to the user bob.
+"""
